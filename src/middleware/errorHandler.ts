@@ -7,7 +7,7 @@ export interface AppError extends Error {
 export const errorHandler = (
   err: AppError,
   _req: Request,
-  _res: Response,
+  res: Response,
   _next: NextFunction,
 ): void => {
   const statusCode = err.statusCode || 500;
@@ -17,4 +17,9 @@ export const errorHandler = (
     console.error(`[Error] ${statusCode}: ${message}`);
     console.error(err.stack);
   }
+
+  res.status(statusCode).json({
+    message,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  });
 };
