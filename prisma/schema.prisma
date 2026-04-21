@@ -25,3 +25,17 @@ model User {
 
   @@map("users")
 }
+
+
+model Document {
+  id        String   @id @default(cuid())
+  title     String   @default("Untitled Document")
+  content   Json     @default("{}")
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("documents")
+}
+
