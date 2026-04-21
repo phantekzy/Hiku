@@ -12,4 +12,9 @@ export const authenticate = (
   next: NextFunction,
 ): void => {
   const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({ message: "No token provided" });
+    return;
+  }
 };
