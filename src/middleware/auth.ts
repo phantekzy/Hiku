@@ -1,5 +1,4 @@
-import { NextFunction, Request, Response } from "express";
-import "dotenv/config";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 interface JwtPayload {
@@ -21,9 +20,11 @@ export const authenticate = (
   }
 
   const token = authHeader.split(" ")[1];
+
   try {
     const secret = process.env.JWT_SECRET;
     if (!secret) throw new Error("JWT_SECRET not configured");
+
     const decoded = jwt.verify(token, secret) as JwtPayload;
     req.user = {
       id: decoded.id,
