@@ -1,1 +1,104 @@
-# Hiku
+## MVP Scope
+
+Hiku provides three core creative modes:
+
+* **Paint Canvas:** A low-latency raster drawing interface for sketching and brainstorming.
+* **Diagram Editor:** A node-based vector tool for creating flowcharts and process maps using specialized nodes (Process, Decision, Terminal).
+* **Dev Editor:** A streamlined environment for technical documentation and developer-centric workflows.
+
+---
+
+## Tech Stack
+
+* **Frontend:** React, TypeScript, Vite, Tailwind CSS.
+* **State Management:** Zustand.
+* **Backend:** Node.js, Express, TypeScript.
+* **Database:** PostgreSQL with Prisma ORM.
+* **Authentication:** JWT-based secure auth flow.
+
+---
+
+## Project Structure
+
+```text
+hiku/
+├── .env
+├── .gitignore
+├── package.json
+├── tsconfig.json
+├── prisma/
+│   └── schema.prisma
+├── src/
+│   ├── index.ts
+│   ├── types/
+│   │   └── express.d.ts
+│   ├── lib/
+│   │   └── prisma.ts
+│   ├── middleware/
+│   │   ├── auth.ts
+│   │   └── errorHandler.ts
+│   ├── routes/
+│   │   ├── index.ts
+│   │   ├── auth.ts
+│   │   ├── documents.ts
+│   │   ├── canvases.ts
+│   │   └── diagrams.ts
+│   └── controllers/
+│       ├── authController.ts
+│       ├── documentController.ts
+│       ├── canvasController.ts
+│       └── diagramController.ts
+└── client/
+    ├── package.json
+    ├── tsconfig.json
+    ├── vite.config.ts
+    ├── index.html
+    ├── tailwind.config.js
+    ├── postcss.config.js
+    └── src/
+        ├── main.tsx
+        ├── App.tsx
+        ├── index.css
+        ├── types/
+        │   └── index.ts
+        ├── lib/
+        │   ├── api.ts
+        │   └── utils.ts
+        ├── store/
+        │   └── useStore.ts
+        ├── hooks/
+        │   ├── useAuth.ts
+        │   └── useDocuments.ts
+        ├── components/
+        │   ├── layout/
+        │   │   ├── Layout.tsx
+        │   │   ├── Sidebar.tsx
+        │   │   └── Header.tsx
+        │   ├── ui/
+        │   │   ├── Button.tsx
+        │   │   ├── Input.tsx
+        │   │   ├── Modal.tsx
+        │   │   └── Tooltip.tsx
+        │   ├── editor/
+        │   │   ├── DevEditor.tsx
+        │   │   └── EditorToolbar.tsx
+        │   ├── canvas/
+        │   │   ├── PaintCanvas.tsx
+        │   │   └── CanvasToolbar.tsx
+        │   └── diagram/
+        │       ├── DiagramEditor.tsx
+        │       ├── DiagramSidebar.tsx
+        │       └── nodes/
+        │           ├── ProcessNode.tsx
+        │           ├── DecisionNode.tsx
+        │           └── TerminalNode.tsx
+        └── pages/
+            ├── Home.tsx
+            ├── Dashboard.tsx
+            ├── PaintPage.tsx
+            ├── DiagramPage.tsx
+            ├── DevEditorPage.tsx
+            └── auth/
+                ├── LoginPage.tsx
+                └── RegisterPage.tsx
+```
