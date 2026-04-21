@@ -39,3 +39,16 @@ model Document {
   @@map("documents")
 }
 
+model Canvas {
+  id        String   @id @default(cuid())
+  title     String   @default("Untitled Canvas")
+  data      Json     @default("{}")
+  thumbnail String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("canvases")
+}
+
