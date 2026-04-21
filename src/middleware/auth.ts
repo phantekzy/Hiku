@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import "dotenv/config";
+import jwt from "jsonwebtoken";
 
 interface JwtPayload {
   id: string;
@@ -23,5 +24,14 @@ export const authenticate = (
   try {
     const secret = process.env.JWT_SECRET;
     if (!secret) throw new Error("JWT_SECRET not configured");
-  } catch {}
+    const decoded = jwt.verify(token, secret) as JwtPayload;
+    req.user = {
+      id: decoded.id,
+      email: decoded.email,
+      username: decoded.username,
+    };
+    next();
+  } catch {
+    res.status(401).json({ message: "Invalid or expired token" });
+  }
 };
