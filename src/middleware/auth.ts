@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import "dotenv/config";
 
 interface JwtPayload {
   id: string;
@@ -17,4 +18,10 @@ export const authenticate = (
     res.status(401).json({ message: "No token provided" });
     return;
   }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error("JWT_SECRET not configured");
+  } catch {}
 };
