@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import z from "zod";
 import jwt from "jsonwebtoken";
+import { prisma } from "../lib/prisma";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -39,5 +40,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     const { email, username, password } = parsed.data;
+
+    const existingEmail = await prisma.user.findUnique({ where: { email } });
   } catch (err) {}
 };
