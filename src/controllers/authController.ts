@@ -39,8 +39,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       res.status(400).json({ message: parsed.error.errors[0].message });
       return;
     }
+
     const { email, username, password } = parsed.data;
 
     const existingEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingEmail) {
+      res.status(409).json({ message: "Email already in use" });
+      return;
+    }
   } catch (err) {}
 };
