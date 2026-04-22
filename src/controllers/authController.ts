@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import z from "zod";
 
 const registerSchema = z.object({
@@ -17,3 +18,13 @@ const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
+
+function signToken(payload: {
+  id: string;
+  email: string;
+  username: string;
+}): string {
+  try {
+    const secret = process.env.JWT_SECRET!;
+  } catch (err) {}
+}
