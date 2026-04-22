@@ -51,5 +51,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const existingUsername = await prisma.user.findUnique({
       where: { username },
     });
+    if (existingUsername) {
+      res.status(409).json({ message: "Username already taken" });
+      return;
+    }
   } catch (err) {}
 };
