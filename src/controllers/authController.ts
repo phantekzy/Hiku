@@ -30,3 +30,8 @@ function signToken(payload: {
     (process.env.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"]) || "7d";
   return jwt.sign(payload, secret, { expiresIn });
 }
+
+export const register = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
