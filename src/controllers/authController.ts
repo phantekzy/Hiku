@@ -122,5 +122,15 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
         updatedAt: true,
       },
     });
-  } catch (err) {}
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
