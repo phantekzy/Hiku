@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import z from "zod";
-import jwt from "jsonwebtoken";
-import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { z } from "zod";
+import { prisma } from "../lib/prisma";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -58,10 +58,54 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-
     const user = await prisma.user.create({
       data: { email, username, password: hashedPassword },
       select: { id: true, email: true, username: true, createdAt: true },
     });
-  } catch (err) {}
+
+    const token = signToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    });
+    res.status(201).json({ token, user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error during registration" });
+  }
+};
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ message: parsed.error.errors[0].message });
+      return;
+    }
+
+    const { email, password } = parsed.data;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      res.status(401).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      res.status(401).json({ message: "Invalid credentials" });
+      return;
+    }
+
+    const token = signToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    });
+    const { password: _, ...safeUser } = user;
+    res.json({ token, user: safeUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error during login" });
+  }
 };
