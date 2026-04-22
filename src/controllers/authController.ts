@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import z from "zod";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
+import bcrypt from "bcryptjs";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -55,5 +56,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       res.status(409).json({ message: "Username already taken" });
       return;
     }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
   } catch (err) {}
 };
