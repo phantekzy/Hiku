@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import z from "zod";
+import jwt from "jsonwebtoken";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -24,7 +25,8 @@ function signToken(payload: {
   email: string;
   username: string;
 }): string {
-  try {
-    const secret = process.env.JWT_SECRET!;
-  } catch (err) {}
+  const secret = process.env.JWT_SECRET!;
+  const expiresIn =
+    (process.env.JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"]) || "7d";
+  return jwt.sign(payload, secret, { expiresIn });
 }
