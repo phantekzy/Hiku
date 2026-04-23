@@ -65,4 +65,15 @@ export const createCanvas = async (
 export const updateCanvas = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+  try {
+    const parsed = updateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ message: parsed.error.errors[0].message });
+      return;
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update canvas" });
+  }
+};
