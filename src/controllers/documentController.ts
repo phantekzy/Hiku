@@ -68,6 +68,7 @@ export const updateDocument = async (
       res.status(400).json({ message: parsed.error.errors[0].message });
       return;
     }
+
     const existing = await prisma.document.findFirst({
       where: { id: req.params.id, userId: req.user!.id },
     });
@@ -75,6 +76,12 @@ export const updateDocument = async (
       res.status(404).json({ message: "Document not found" });
       return;
     }
+
+    const updated = await prisma.document.update({
+      where: { id: req.params.id },
+      data: { ...parsed.data },
+    });
+    res.json(updated);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to update document" });
