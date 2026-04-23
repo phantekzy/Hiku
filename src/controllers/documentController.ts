@@ -36,5 +36,9 @@ export const getDocument = async (
       res.status(404).json({ message: "Document not found" });
       return;
     }
-  } catch (err) {}
+    res.json(doc);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch document" });
+  }
 };
