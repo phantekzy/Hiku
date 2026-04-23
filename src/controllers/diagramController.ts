@@ -47,3 +47,22 @@ export const getDiagram = async (
     res.status(500).json({ message: "Failed to fetch diagram" });
   }
 };
+
+export const createDiagram = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const diagram = await prisma.diagram.create({
+      data: {
+        userId: req.user!.id,
+        title: "Untitled Diagram",
+        data: { nodes: [], edges: [] },
+      },
+    });
+    res.status(201).json(diagram);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to create diagram" });
+  }
+};
