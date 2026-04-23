@@ -42,3 +42,8 @@ export const getDocument = async (
     res.status(500).json({ message: "Failed to fetch document" });
   }
 };
+
+export const createDocument = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
