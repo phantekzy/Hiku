@@ -18,5 +18,8 @@ export const getDocuments = async (
       select: { id: true, title: true, createdAt: true, updatedAt: true },
     });
     res.json(docs);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to fetch documents" });
+  }
 };
