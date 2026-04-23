@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import z from "zod";
+import { prisma } from "../lib/prisma";
 
 const updateSchema = z.object({
   title: z.string().min(1).max(200).optional(),
@@ -12,6 +13,18 @@ export const getCanvases = async (
   res: Response,
 ): Promise<void> => {
   try {
+    const canvases = await prisma.canvas.findFirst({
+      where: { userId: req.user!.id },
+      orderBy: { updatedAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        thumbnail: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    res.json(canvases);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch canvases" });
