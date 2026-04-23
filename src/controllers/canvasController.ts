@@ -30,3 +30,8 @@ export const getCanvases = async (
     res.status(500).json({ message: "Failed to fetch canvases" });
   }
 };
+
+export const getCanvas = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
