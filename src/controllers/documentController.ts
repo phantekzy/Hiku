@@ -100,6 +100,8 @@ export const deleteDocument = async (
       res.status(404).json({ message: "Document not found" });
       return;
     }
+    await prisma.document.delete({ where: { id: req.params.id } });
+    res.status(204).send();
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete document" });
