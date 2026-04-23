@@ -50,4 +50,14 @@ export const getCanvas = async (req: Request, res: Response): Promise<void> => {
 export const createCanvas = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+  try {
+    const canvas = await prisma.canvas.create({
+      data: { userId: req.user!.id, title: "Untitled Canvas", data: {} },
+    });
+    res.status(201).json(canvas);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to create canvas" });
+  }
+};
