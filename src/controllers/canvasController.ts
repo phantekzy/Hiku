@@ -89,3 +89,8 @@ export const updateCanvas = async (
     res.status(500).json({ message: "Failed to update canvas" });
   }
 };
+
+export const deleteCanvas = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
