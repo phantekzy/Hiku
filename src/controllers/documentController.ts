@@ -27,4 +27,14 @@ export const getDocuments = async (
 export const getDocument = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+  try {
+    const doc = await prisma.document.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!doc) {
+      res.status(404).json({ message: "Document not found" });
+      return;
+    }
+  } catch (err) {}
+};
