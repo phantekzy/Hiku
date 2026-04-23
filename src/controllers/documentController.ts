@@ -48,6 +48,10 @@ export const createDocument = async (
   res: Response,
 ): Promise<void> => {
   try {
+    const doc = await prisma.document.create({
+      data: { userId: req.user!.id, title: "Untitled Document", content: {} },
+    });
+    res.status(201).json(doc);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to create document" });
