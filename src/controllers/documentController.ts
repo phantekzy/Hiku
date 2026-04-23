@@ -93,6 +93,13 @@ export const deleteDocument = async (
   res: Response,
 ): Promise<void> => {
   try {
+    const existing = await prisma.document.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      res.status(404).json({ message: "Document not found" });
+      return;
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete document" });
