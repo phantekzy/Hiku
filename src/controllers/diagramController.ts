@@ -66,3 +66,33 @@ export const createDiagram = async (
     res.status(500).json({ message: "Failed to create diagram" });
   }
 };
+
+export const updateDiagram = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const parsed = updateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ message: parsed.error.errors[0].message });
+      return;
+    }
+
+    const existing = await prisma.diagram.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      res.status(404).json({ message: "Diagram not found" });
+      return;
+    }
+
+    const updated = await prisma.diagram.update({
+      where: { id: req.params.id },
+      data: { ...parsed.data },
+    });
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update diagram" });
+  }
+};
