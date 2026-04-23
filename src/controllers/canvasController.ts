@@ -61,3 +61,8 @@ export const createCanvas = async (
     res.status(500).json({ message: "Failed to create canvas" });
   }
 };
+
+export const updateCanvas = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
