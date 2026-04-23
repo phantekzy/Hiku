@@ -23,3 +23,8 @@ export const getDocuments = async (
     res.status(500).json({ message: "Failed to fetch documents" });
   }
 };
+
+export const getDocument = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
