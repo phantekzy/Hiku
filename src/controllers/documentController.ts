@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import z from "zod";
+import { z } from "zod";
 import { prisma } from "../lib/prisma";
 
 const upsertSchema = z.object({
@@ -19,7 +19,7 @@ export const getDocuments = async (
     });
     res.json(docs);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ message: "Failed to fetch documents" });
   }
 };
