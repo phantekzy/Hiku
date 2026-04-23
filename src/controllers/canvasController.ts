@@ -72,6 +72,13 @@ export const updateCanvas = async (
       res.status(400).json({ message: parsed.error.errors[0].message });
       return;
     }
+    const existing = await prisma.canvas.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      res.status(404).json({ message: "Canvas not found" });
+      return;
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to update canvas" });
