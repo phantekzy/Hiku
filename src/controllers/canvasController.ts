@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import z from "zod";
+import { z } from "zod";
 import { prisma } from "../lib/prisma";
 
 const updateSchema = z.object({
@@ -13,7 +13,7 @@ export const getCanvases = async (
   res: Response,
 ): Promise<void> => {
   try {
-    const canvases = await prisma.canvas.findFirst({
+    const canvases = await prisma.canvas.findMany({
       where: { userId: req.user!.id },
       orderBy: { updatedAt: "desc" },
       select: {
@@ -72,6 +72,7 @@ export const updateCanvas = async (
       res.status(400).json({ message: parsed.error.errors[0].message });
       return;
     }
+
     const existing = await prisma.canvas.findFirst({
       where: { id: req.params.id, userId: req.user!.id },
     });
@@ -79,6 +80,7 @@ export const updateCanvas = async (
       res.status(404).json({ message: "Canvas not found" });
       return;
     }
+
     const updated = await prisma.canvas.update({
       where: { id: req.params.id },
       data: { ...parsed.data },
