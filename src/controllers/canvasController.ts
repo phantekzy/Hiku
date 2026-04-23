@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import z from "zod";
 
 const updateSchema = z.object({
@@ -5,3 +6,8 @@ const updateSchema = z.object({
   data: z.record(z.unknown()).optional(),
   thumbnail: z.string().optional(),
 });
+
+export const getCanvases = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
