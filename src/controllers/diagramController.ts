@@ -28,3 +28,22 @@ export const getDiagrams = async (
     res.status(500).json({ message: "Failed to fetch diagrams" });
   }
 };
+
+export const getDiagram = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const diagram = await prisma.diagram.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!diagram) {
+      res.status(404).json({ message: "Diagram not found" });
+      return;
+    }
+    res.json(diagram);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch diagram" });
+  }
+};
