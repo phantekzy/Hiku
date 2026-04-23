@@ -61,4 +61,10 @@ export const createDocument = async (
 export const updateDocument = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+  try {
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update document" });
+  }
+};
