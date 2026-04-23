@@ -93,4 +93,19 @@ export const updateCanvas = async (
 export const deleteCanvas = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+  try {
+    const existing = await prisma.canvas.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      res.status(404).json({ message: "Canvas not found" });
+      return;
+    }
+    await prisma.canvas.delete({ where: { id: req.params.id } });
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete canvas" });
+  }
+};
