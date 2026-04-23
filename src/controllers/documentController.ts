@@ -57,3 +57,8 @@ export const createDocument = async (
     res.status(500).json({ message: "Failed to create document" });
   }
 };
+
+export const updateDocument = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
