@@ -87,3 +87,8 @@ export const updateDocument = async (
     res.status(500).json({ message: "Failed to update document" });
   }
 };
+
+export const deleteDocument = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {};
