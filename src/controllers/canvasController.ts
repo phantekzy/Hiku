@@ -10,4 +10,10 @@ const updateSchema = z.object({
 export const getCanvases = async (
   req: Request,
   res: Response,
-): Promise<void> => {};
+): Promise<void> => {
+  try {
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch canvases" });
+  }
+};
