@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import routes from "./routes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,3 +26,5 @@ app.use("/api", routes);
 app.use((_req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
+
+app.use(errorHandler);
