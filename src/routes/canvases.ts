@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 const router = Router();
-
+// will add this later
 router.use(authenticate);
 
 router.get("/", getCanvases);
