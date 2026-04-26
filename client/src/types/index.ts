@@ -14,3 +14,13 @@ export interface Document {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Canvas {
+  id: string;
+  title: string;
+  data: Record<string, unknown>;
+  thumbnail?: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
