@@ -40,3 +40,10 @@ export interface DiagramNode {
   position: { x: number; y: number };
   data: { label: string };
 }
+
+export interface DiagramEdge {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+}
