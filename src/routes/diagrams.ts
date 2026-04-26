@@ -1,9 +1,16 @@
 import { Router } from "express";
+import {
+  getDiagrams,
+  getDiagram,
+  createDiagram,
+  updateDiagram,
+  deleteDiagram,
+} from "../controllers/diagramController";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 router.use(authenticate);
 
-// will add this later
 router.get("/", getDiagrams);
 router.get("/:id", getDiagram);
 router.post("/", createDiagram);
