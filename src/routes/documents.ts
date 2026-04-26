@@ -1,7 +1,14 @@
 import { Router } from "express";
+import {
+  getDocuments,
+  getDocument,
+  createDocument,
+  updateDocument,
+  deleteDocument,
+} from "../controllers/documentController";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
-// will add this later
 router.use(authenticate);
 
 router.get("/", getDocuments);
