@@ -47,3 +47,13 @@ export interface DiagramEdge {
   target: string;
   label?: string;
 }
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+export type WorkspaceItem =
+  | { type: "document"; item: Document }
+  | { type: "canvas"; item: Canvas }
+  | { type: "diagram"; item: Diagram };
