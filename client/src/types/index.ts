@@ -33,3 +33,10 @@ export interface Diagram {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface DiagramNode {
+  id: string;
+  type: "process" | "decision" | "terminal";
+  position: { x: number; y: number };
+  data: { label: string };
+}
