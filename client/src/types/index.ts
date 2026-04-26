@@ -24,3 +24,12 @@ export interface Canvas {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Diagram {
+  id: string;
+  title: string;
+  data: { nodes: DiagramNode[]; edges: DiagramEdge[] };
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
