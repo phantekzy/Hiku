@@ -1,7 +1,14 @@
 import { Router } from "express";
+import {
+  getCanvases,
+  getCanvas,
+  createCanvas,
+  updateCanvas,
+  deleteCanvas,
+} from "../controllers/canvasController";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
-// will add this later
 router.use(authenticate);
 
 router.get("/", getCanvases);
