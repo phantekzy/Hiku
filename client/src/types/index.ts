@@ -5,3 +5,12 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Document {
+  id: string;
+  title: string;
+  content: Record<string, unknown>;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
