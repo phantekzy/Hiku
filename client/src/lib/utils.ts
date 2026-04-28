@@ -39,3 +39,7 @@ export function debounce<T extends (...args: unknown[]) => void>(
     timer = setTimeout(() => fn(...args), delay);
   };
 }
+
+export function generateId(): string {
+  return Math.random().toString(36).substring(2, 9);
+}
