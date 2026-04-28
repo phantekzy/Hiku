@@ -28,3 +28,14 @@ export function formatRelative(date: string | Date): string {
   if (minutes > 0) return `${minutes}m ago`;
   return "just now";
 }
+
+export function debounce<T extends (...args: unknown[]) => void>(
+  fn: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
+  let timer: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
