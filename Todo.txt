@@ -1,2 +1,4 @@
 X - The Imports in routes
+- css and tailwind 
+- start from Header.tsx
 
