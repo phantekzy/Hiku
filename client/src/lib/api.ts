@@ -13,4 +13,13 @@ async function request<T>(
     "content-type": "application/json",
     ...(options.headers as Record<string, string>),
   };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
 }
