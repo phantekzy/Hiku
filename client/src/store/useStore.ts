@@ -1,4 +1,5 @@
 import { User } from "../types";
+import { create } from "zustand";
 
 interface StoreState {
   // Auth
@@ -13,3 +14,5 @@ interface StoreState {
   toggleSidebar: () => void;
   setSidebarCollapsed: (v: boolean) => void;
 }
+
+export const useStore = create<StoreState>()();
