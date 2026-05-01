@@ -1,6 +1,6 @@
-import { User } from "../types";
 import { create } from "zustand";
-import { presist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
+import type { User } from "../types";
 
 interface StoreState {
   // Auth
@@ -17,13 +17,35 @@ interface StoreState {
 }
 
 export const useStore = create<StoreState>()(
-  presist((set, get) => ({
-    user: null,
-    token: null,
+  persist(
+    (set, get) => ({
+      user: null,
+      token: null,
 
-    setAuth: (user, token) => {
-      localStorage.setItem("hiku_token", token);
-      set({ user, token });
+      setAuth: (user, token) => {
+        localStorage.setItem("hiku_token", token);
+        set({ user, token });
+      },
+
+      clearAuth: () => {
+        localStorage.removeItem("hiku_token");
+        set({ user: null, token: null });
+      },
+
+      isAuthenticated: () => !!get().token,
+
+      sidebarCollapsed: false,
+      toggleSidebar: () =>
+        set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+      setSidebarCollapsed: (v) => set({ sidebarCollapsed: v }),
+    }),
+    {
+      name: "hiku-storage",
+      partialize: (s) => ({
+        user: s.user,
+        token: s.token,
+        sidebarCollapsed: s.sidebarCollapsed,
+      }),
     },
-  })),
+  ),
 );
