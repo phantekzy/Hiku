@@ -6,6 +6,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: string;
     hint?: string;
     leftIcon?: React.ReactNode;
+    prefix?: string;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -13,6 +14,7 @@ export const Input: React.FC<InputProps> = ({
     error,
     hint,
     leftIcon,
+    prefix,
     className,
     id,
     ...props
@@ -20,36 +22,43 @@ export const Input: React.FC<InputProps> = ({
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
     return (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 w-full">
             {label && (
-                <label htmlFor={inputId} className="text-sm font-medium text-hiku-text">
-                    {label}
+                <label htmlFor={inputId} className="text-2xs font-mono text-hiku-muted uppercase tracking-widest">
+                    <span className="text-hiku-accent">// </span>{label}
                 </label>
             )}
-            <div className="relative">
-                {leftIcon && (
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-hiku-muted">
-                        {leftIcon}
-                    </div>
+            <div className="relative flex items-center">
+                {prefix && (
+                    <span className="absolute left-3 text-hiku-moss text-sm font-mono select-none">{prefix}</span>
+                )}
+                {leftIcon && !prefix && (
+                    <span className="absolute left-3 text-hiku-muted">{leftIcon}</span>
                 )}
                 <input
                     id={inputId}
                     className={cn(
-                        'w-full rounded-lg border bg-hiku-surface2 px-3 py-2.5 text-sm text-hiku-text',
-                        'placeholder:text-hiku-muted/60',
-                        'border-hiku-border',
-                        'focus:outline-none focus:ring-2 focus:ring-hiku-accent focus:border-hiku-accent',
+                        'w-full bg-hiku-surface border text-hiku-cream font-mono text-sm',
+                        'rounded-sm px-3 py-2.5',
+                        'placeholder:text-hiku-moss/60',
+                        'focus:outline-none focus:border-hiku-accent focus:bg-hiku-surface2',
                         'transition-colors duration-150',
-                        'disabled:opacity-50 disabled:cursor-not-allowed',
-                        leftIcon && 'pl-10',
-                        error && 'border-red-500 focus:ring-red-500',
+                        'disabled:opacity-40 disabled:cursor-not-allowed',
+                        error ? 'border-hiku-danger' : 'border-hiku-border',
+                        (leftIcon || prefix) && 'pl-9',
                         className
                     )}
                     {...props}
                 />
             </div>
-            {error && <p className="text-xs text-red-400">{error}</p>}
-            {hint && !error && <p className="text-xs text-hiku-muted">{hint}</p>}
+            {error && (
+                <p className="text-2xs text-hiku-danger font-mono">
+                    <span className="text-hiku-danger-muted">✗ </span>{error}
+                </p>
+            )}
+            {hint && !error && (
+                <p className="text-2xs text-hiku-muted font-mono">{hint}</p>
+            )}
         </div>
     );
 };

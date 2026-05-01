@@ -1,85 +1,139 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, Paintbrush, Workflow, FileText, ArrowRight } from 'lucide-react';
+import { FileText, Paintbrush, Workflow, ArrowRight, Terminal } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 const FEATURES = [
     {
-        icon: <FileText size={28} className="text-indigo-400" />,
+        cmd: 'hiku doc --new',
         title: 'Dev Editor',
-        desc: 'Write documentation, tutorials and notes like a developer. Syntax-highlighted code blocks, headings, callouts — everything you need.',
-        color: 'border-indigo-500/30 bg-indigo-500/5',
+        desc: 'Rich-text documentation with syntax-highlighted code blocks. Write technical content the way developers think.',
+        icon: FileText,
+        stat: '40+ languages',
     },
     {
-        icon: <Paintbrush size={28} className="text-violet-400" />,
+        cmd: 'hiku canvas --open',
         title: 'Paint Canvas',
-        desc: 'Draw freely with a professional canvas. Brushes, shapes, colors, layers — export your artwork as high-res PNG.',
-        color: 'border-violet-500/30 bg-violet-500/5',
+        desc: 'Professional vector drawing. Sketch wireframes, diagrams, and UI mockups. Export at 2× resolution.',
+        icon: Paintbrush,
+        stat: '7 drawing tools',
     },
     {
-        icon: <Workflow size={28} className="text-purple-400" />,
+        cmd: 'hiku diagram --flow',
         title: 'Diagram Builder',
-        desc: 'Build flowcharts, system diagrams, and process maps with drag-and-drop nodes and smart connections.',
-        color: 'border-purple-500/30 bg-purple-500/5',
+        desc: 'Node-based flowchart editor. Map system architecture, user flows, and process logic visually.',
+        icon: Workflow,
+        stat: 'drag & drop nodes',
     },
 ];
 
 export const Home: React.FC = () => (
-    <div className="min-h-screen bg-hiku-bg">
-        {/* Header */}
-        <header className="flex items-center justify-between px-8 py-5 border-b border-hiku-border">
+    <div className="min-h-screen bg-hiku-bg flex flex-col">
+
+        {/* Nav */}
+        <nav className="flex items-center justify-between px-4 sm:px-8 py-4 border-b border-hiku-border/50">
+            <div className="flex items-center gap-1.5">
+                <span className="font-mono font-bold text-hiku-cream text-lg tracking-tighter">hiku</span>
+                <span className="text-hiku-accent text-xs animate-blink">▋</span>
+            </div>
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-hiku-accent flex items-center justify-center">
-                    <Zap size={18} className="text-white" />
-                </div>
-                <span className="text-xl font-bold text-hiku-text">hiku</span>
+                <Link to="/login">
+                    <Button variant="ghost" size="sm">sign_in</Button>
+                </Link>
+                <Link to="/register">
+                    <Button variant="primary" size="sm">get_started</Button>
+                </Link>
             </div>
-            <div className="flex items-center gap-3">
-                <Link to="/login"><Button variant="ghost">Sign In</Button></Link>
-                <Link to="/register"><Button>Get Started</Button></Link>
-            </div>
-        </header>
+        </nav>
 
         {/* Hero */}
-        <section className="max-w-5xl mx-auto px-8 py-24 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-hiku-accent/30 bg-hiku-accent/10 text-hiku-accent text-xs font-medium mb-6">
-                <Zap size={12} />
-                All-in-one creative workspace
+        <section className="flex-1 flex flex-col items-start justify-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 max-w-5xl mx-auto w-full">
+
+            {/* terminal prompt line */}
+            <div className="flex items-center gap-2 mb-6 sm:mb-8">
+                <Terminal size={14} className="text-hiku-accent" />
+                <span className="font-mono text-xs text-hiku-muted">~/workspace</span>
+                <span className="font-mono text-xs text-hiku-moss">$</span>
+                <span className="font-mono text-xs text-hiku-cream">hiku --init</span>
             </div>
-            <h1 className="text-6xl font-extrabold text-hiku-text leading-tight mb-6">
-                Write. Draw. <br />
-                <span className="text-hiku-accent">Diagram.</span>
+
+            <h1 className="font-mono font-extrabold text-hiku-cream leading-[1.1] tracking-tight mb-6 sm:mb-8"
+                style={{ fontSize: 'clamp(2.5rem, 8vw, 5rem)' }}
+            >
+                write.<br />
+                <span className="text-hiku-accent">draw.</span><br />
+                diagram.
             </h1>
-            <p className="text-xl text-hiku-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-                Hiku is the creative workspace for developers and designers. Document ideas,
-                paint freely, and build diagrams — all in one place.
+
+            <p className="font-mono text-hiku-cream-dim text-sm sm:text-base max-w-lg mb-8 sm:mb-10 leading-relaxed">
+                One workspace for developers and designers.
+                Documents with code blocks, a real drawing canvas,
+                and a flowchart builder — all persisted, all fast.
             </p>
-            <div className="flex items-center justify-center gap-4">
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <Link to="/register">
-                    <Button size="lg" icon={<ArrowRight size={18} />}>
-                        Start Creating
+                    <Button size="lg" icon={<ArrowRight size={15} />}>
+                        open_workspace
                     </Button>
                 </Link>
                 <Link to="/login">
-                    <Button size="lg" variant="outline">Sign In</Button>
+                    <Button size="lg" variant="outline">
+                        sign_in →
+                    </Button>
                 </Link>
+            </div>
+
+            {/* subtle stat row */}
+            <div className="flex flex-wrap items-center gap-4 sm:gap-8 mt-10 sm:mt-14 pt-8 border-t border-hiku-border/50 w-full">
+                {['3 tools', 'auto-save', 'open source', 'mobile ready'].map((s) => (
+                    <span key={s} className="font-mono text-2xs text-hiku-moss uppercase tracking-widest">
+                        <span className="text-hiku-accent mr-1">✓</span>{s}
+                    </span>
+                ))}
             </div>
         </section>
 
         {/* Features */}
-        <section className="max-w-5xl mx-auto px-8 pb-24">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {FEATURES.map(({ icon, title, desc, color }) => (
+        <section className="px-4 sm:px-8 lg:px-16 pb-16 sm:pb-24 max-w-5xl mx-auto w-full">
+            <p className="font-mono text-2xs text-hiku-muted uppercase tracking-widest mb-6">
+                <span className="text-hiku-accent">// </span>features
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                {FEATURES.map(({ cmd, title, desc, icon: Icon, stat }) => (
                     <div
                         key={title}
-                        className={`p-6 rounded-2xl border ${color} transition-transform hover:-translate-y-1`}
+                        className="group bg-hiku-surface border border-hiku-border hover:border-hiku-border-light transition-colors rounded p-4 sm:p-5 flex flex-col gap-3"
                     >
-                        <div className="mb-4">{icon}</div>
-                        <h3 className="text-lg font-semibold text-hiku-text mb-2">{title}</h3>
-                        <p className="text-sm text-hiku-muted leading-relaxed">{desc}</p>
+                        {/* command line header */}
+                        <div className="flex items-center gap-1.5 font-mono text-2xs text-hiku-moss">
+                            <span className="text-hiku-accent">$</span>
+                            <span className="group-hover:text-hiku-muted transition-colors">{cmd}</span>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 rounded-sm bg-hiku-surface2 border border-hiku-border flex items-center justify-center flex-shrink-0 group-hover:border-hiku-accent/40 transition-colors">
+                                <Icon size={15} className="text-hiku-accent" />
+                            </div>
+                            <div className="min-w-0">
+                                <h3 className="font-mono font-semibold text-sm text-hiku-cream mb-1">{title}</h3>
+                                <p className="font-mono text-xs text-hiku-muted leading-relaxed">{desc}</p>
+                            </div>
+                        </div>
+
+                        <div className="mt-auto pt-2 border-t border-hiku-border/50">
+                            <span className="font-mono text-2xs text-hiku-accent-bright">→ {stat}</span>
+                        </div>
                     </div>
                 ))}
             </div>
         </section>
+
+        {/* Footer */}
+        <footer className="px-4 sm:px-8 py-4 border-t border-hiku-border/50">
+            <p className="font-mono text-2xs text-hiku-pine text-center">
+                <span className="text-hiku-moss">// </span>hiku // built with precision // Imainiginations
+            </p>
+        </footer>
     </div>
 );

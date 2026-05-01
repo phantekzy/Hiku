@@ -9,16 +9,10 @@ interface ModalProps {
     title?: string;
     children: React.ReactNode;
     size?: 'sm' | 'md' | 'lg';
-    className?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
-    open,
-    onClose,
-    title,
-    children,
-    size = 'md',
-    className,
+    open, onClose, title, children, size = 'md',
 }) => {
     useEffect(() => {
         const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -31,27 +25,31 @@ export const Modal: React.FC<ModalProps> = ({
     const sizes = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-2xl' };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in"
                 onClick={onClose}
             />
-            <div
-                className={cn(
-                    'relative z-10 w-full bg-hiku-surface border border-hiku-border rounded-xl shadow-2xl animate-slide-in',
-                    sizes[size],
-                    className
-                )}
-            >
-                {title && (
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-hiku-border">
-                        <h2 className="text-lg font-semibold text-hiku-text">{title}</h2>
-                        <Button variant="ghost" size="xs" onClick={onClose}>
-                            <X size={16} />
-                        </Button>
+            <div className={cn(
+                'relative z-10 w-full bg-hiku-surface border border-hiku-border',
+                'rounded-t-lg sm:rounded shadow-glow animate-slide-up',
+                sizes[size],
+            )}>
+                {/* top bar */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-hiku-border">
+                    <div className="flex items-center gap-2">
+                        <span className="text-hiku-accent text-xs">▋</span>
+                        {title && (
+                            <span className="text-xs font-mono font-semibold text-hiku-cream-dim uppercase tracking-wider">
+                                {title}
+                            </span>
+                        )}
                     </div>
-                )}
-                <div className="p-6">{children}</div>
+                    <Button variant="ghost" size="xs" onClick={onClose}>
+                        <X size={13} />
+                    </Button>
+                </div>
+                <div className="p-4 sm:p-5">{children}</div>
             </div>
         </div>
     );

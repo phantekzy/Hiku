@@ -2,193 +2,323 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap");
+
 @layer base {
-  * {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
   html,
   body,
   #root {
     height: 100%;
-    margin: 0;
-    padding: 0;
   }
 
   body {
-    background-color: #0d0d1a;
-    color: #e2e8f0;
-    font-family: "Inter", system-ui, sans-serif;
+    background-color: #0a0f0a;
+    color: #e8dfc8;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-image:
+      linear-gradient(rgba(74, 124, 89, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74, 124, 89, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  ::selection {
+    background: rgba(74, 124, 89, 0.35);
+    color: #e8dfc8;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
   ::-webkit-scrollbar-track {
-    background: #0d0d1a;
+    background: #0a0f0a;
   }
   ::-webkit-scrollbar-thumb {
-    background: #1e1e3a;
-    border-radius: 3px;
+    background: #1e331e;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #7c3aed;
+    background: #4a7c59;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #e8dfc8;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  input,
+  textarea,
+  select {
+    font-family: inherit;
   }
 }
 
-/* TipTap Editor */
+/* ── TipTap Editor ── */
 .tiptap-editor .ProseMirror {
   outline: none;
-  min-height: 400px;
-  padding: 1.5rem;
-  font-size: 1rem;
-  line-height: 1.75;
-  color: #e2e8f0;
+  min-height: 60vh;
+  padding: 1.5rem 1rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: #e8dfc8;
 }
+@media (min-width: 640px) {
+  .tiptap-editor .ProseMirror {
+    padding: 2rem 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .tiptap-editor .ProseMirror {
+    padding: 3rem;
+    font-size: 0.9375rem;
+  }
+}
+
 .tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  color: #475569;
+  color: #2a4a2a;
   pointer-events: none;
   float: left;
   height: 0;
+  font-style: italic;
 }
+
+.tiptap-editor .ProseMirror > * + * {
+  margin-top: 1rem;
+}
+
 .tiptap-editor .ProseMirror h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 1.5rem 0 0.5rem;
-  color: #f1f5f9;
+  font-size: clamp(1.4rem, 4vw, 1.75rem);
+  font-weight: 800;
+  color: #e8dfc8;
+  margin: 2rem 0 1rem;
+  letter-spacing: -0.03em;
+  border-bottom: 1px solid #1e331e;
+  padding-bottom: 0.5rem;
 }
 .tiptap-editor .ProseMirror h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 1.25rem 0 0.5rem;
-  color: #f1f5f9;
+  font-size: clamp(1.1rem, 3vw, 1.25rem);
+  font-weight: 700;
+  color: #b8ad94;
+  margin: 1.75rem 0 0.75rem;
+}
+.tiptap-editor .ProseMirror h2::before {
+  content: "## ";
+  color: #4a7c59;
 }
 .tiptap-editor .ProseMirror h3 {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin: 1rem 0 0.5rem;
-  color: #f1f5f9;
+  color: #8a9e8a;
+  margin: 1.5rem 0 0.5rem;
 }
+.tiptap-editor .ProseMirror h3::before {
+  content: "### ";
+  color: #4a7c59;
+}
+
 .tiptap-editor .ProseMirror code {
-  background: #1a1a35;
-  color: #a78bfa;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.875rem;
+  background: #0f1a0f;
+  color: #6db87e;
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.8125rem;
+  border: 1px solid #1e331e;
 }
 .tiptap-editor .ProseMirror pre {
-  background: #0f0f20;
-  border: 1px solid #1e1e3a;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
+  background: #080d08;
+  border: 1px solid #1e331e;
+  border-left: 3px solid #4a7c59;
+  border-radius: 0 3px 3px 0;
+  padding: 1.25rem;
   overflow-x: auto;
-  margin: 1rem 0;
+  margin: 1.25rem 0;
 }
 .tiptap-editor .ProseMirror pre code {
   background: none;
-  color: #e2e8f0;
+  color: #b8ad94;
   padding: 0;
-  font-size: 0.875rem;
-  line-height: 1.6;
+  border: none;
+  font-size: 0.8125rem;
+  line-height: 1.7;
 }
 .tiptap-editor .ProseMirror blockquote {
-  border-left: 3px solid #7c3aed;
-  padding-left: 1rem;
-  margin-left: 0;
-  color: #94a3b8;
+  border-left: 2px solid #4a7c59;
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 1rem 0;
+  color: #7a7264;
   font-style: italic;
 }
-.tiptap-editor .ProseMirror ul,
+.tiptap-editor .ProseMirror ul {
+  list-style: none;
+  padding-left: 1.25rem;
+}
+.tiptap-editor .ProseMirror ul li::before {
+  content: "→";
+  color: #4a7c59;
+  margin-right: 0.5rem;
+  margin-left: -1.25rem;
+  display: inline-block;
+}
 .tiptap-editor .ProseMirror ol {
+  list-style: decimal;
   padding-left: 1.5rem;
-  margin: 0.5rem 0;
+  color: #4a7c59;
+}
+.tiptap-editor .ProseMirror ol li {
+  color: #e8dfc8;
 }
 .tiptap-editor .ProseMirror li {
-  margin: 0.25rem 0;
+  margin: 0.35rem 0;
 }
 .tiptap-editor .ProseMirror mark {
-  background: rgba(124, 58, 237, 0.3);
-  color: #c4b5fd;
-  border-radius: 2px;
-  padding: 0 2px;
+  background: rgba(74, 124, 89, 0.25);
+  color: #6db87e;
+  border-radius: 1px;
+  padding: 0 3px;
 }
 .tiptap-editor .ProseMirror hr {
   border: none;
-  border-top: 1px solid #1e1e3a;
-  margin: 1.5rem 0;
+  border-top: 1px solid #1e331e;
+  margin: 2rem 0;
 }
 .tiptap-editor .ProseMirror a {
-  color: #818cf8;
+  color: #6db87e;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  text-decoration-color: #2a4a35;
 }
 
-/* Syntax highlighting */
+/* ── Syntax Highlighting ── */
 .hljs-comment,
 .hljs-quote {
-  color: #6272a4;
+  color: #3d5c3d;
+  font-style: italic;
 }
 .hljs-keyword {
-  color: #ff79c6;
+  color: #6db87e;
 }
 .hljs-string,
 .hljs-attr {
-  color: #f1fa8c;
+  color: #b8ad94;
 }
 .hljs-number,
 .hljs-literal {
-  color: #bd93f9;
+  color: #8a9e8a;
 }
 .hljs-built_in,
 .hljs-type {
-  color: #8be9fd;
+  color: #5a9669;
 }
 .hljs-function,
 .hljs-title {
-  color: #50fa7b;
+  color: #e8dfc8;
 }
 .hljs-variable,
 .hljs-params {
-  color: #ffb86c;
+  color: #a89e84;
 }
 .hljs-tag {
-  color: #ff5555;
+  color: #4a7c59;
 }
 
-/* React Flow */
+/* ── React Flow ── */
 .react-flow__background {
-  background: #0d0d1a;
+  background: #0a0f0a;
 }
 .react-flow__edge-path {
-  stroke: #7c3aed;
+  stroke: #4a7c59;
+  stroke-width: 1.5;
 }
 .react-flow__handle {
-  background: #7c3aed !important;
-  width: 10px !important;
-  height: 10px !important;
-  border: 2px solid #141428 !important;
+  background: #4a7c59 !important;
+  width: 8px !important;
+  height: 8px !important;
+  border: 2px solid #0a0f0a !important;
+  border-radius: 2px !important;
 }
 .react-flow__controls {
-  background: #141428;
-  border: 1px solid #1e1e3a;
-  border-radius: 8px;
+  background: #0f1a0f;
+  border: 1px solid #1e331e;
+  border-radius: 3px;
+  box-shadow: none;
 }
 .react-flow__controls-button {
-  background: #141428;
-  border-color: #1e1e3a;
-  color: #e2e8f0;
-  fill: #e2e8f0;
+  background: #0f1a0f;
+  border-color: #1e331e;
+  color: #8a9e8a;
+  fill: #8a9e8a;
 }
 .react-flow__controls-button:hover {
-  background: #1a1a35;
+  background: #162016;
+  fill: #e8dfc8;
 }
 .react-flow__minimap {
-  background: #141428;
-  border: 1px solid #1e1e3a;
-  border-radius: 8px;
+  background: #0f1a0f;
+  border: 1px solid #1e331e;
+  border-radius: 3px;
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes scan {
+  0% {
+    left: -4rem;
+  }
+  100% {
+    left: 100%;
+  }
 }

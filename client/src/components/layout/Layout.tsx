@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -9,11 +9,20 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, title, headerActions }) => {
+    const [mobileOpen, setMobileOpen] = useState(false);
+
     return (
         <div className="flex h-screen bg-hiku-bg overflow-hidden">
-            <Sidebar />
-            <div className="flex flex-col flex-1 min-w-0">
-                <Header title={title} actions={headerActions} />
+            <Sidebar
+                mobileOpen={mobileOpen}
+                onMobileClose={() => setMobileOpen(false)}
+            />
+            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                <Header
+                    title={title}
+                    actions={headerActions}
+                    onMobileMenuOpen={() => setMobileOpen(true)}
+                />
                 <main className="flex-1 overflow-auto">{children}</main>
             </div>
         </div>
