@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Lock, Zap } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react'; // Removed the vibe-coder Zap icon
 import { useAuth } from '../../hooks/useAuth';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -27,32 +27,37 @@ export const LoginPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-hiku-bg flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                {/* Logo */}
-                <div className="flex items-center justify-center gap-3 mb-8">
-                    <div className="w-10 h-10 rounded-xl bg-hiku-accent flex items-center justify-center shadow-lg shadow-hiku-accent/30">
-                        <Zap size={22} className="text-white" />
-                    </div>
-                    <span className="text-3xl font-bold text-hiku-text tracking-tight">hiku</span>
+
+                {/* Terminal Style Logo - No generic icons, no floating badges */}
+                <div className="flex items-center justify-center mb-10 font-mono">
+                    <span className="text-hiku-moss text-3xl font-bold mr-4">{">"}</span>
+                    <span className="text-4xl font-bold text-hiku-cream tracking-tight">hiku</span>
+                    <span className="w-4 h-9 bg-hiku-accent animate-blink ml-2 inline-block"></span>
                 </div>
 
-                <div className="bg-hiku-surface border border-hiku-border rounded-2xl p-8 shadow-2xl">
-                    <h2 className="text-2xl font-bold text-hiku-text mb-1">Welcome back</h2>
-                    <p className="text-hiku-muted text-sm mb-6">Sign in to your workspace</p>
+                {/* Brutalist / Systems Card */}
+                <div className="bg-hiku-surface border border-hiku-border p-8 relative shadow-glow-sm">
+                    {/* Minimalist corner accents */}
+                    <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-hiku-accent"></div>
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-hiku-accent"></div>
+
+                    <h2 className="text-2xl font-bold text-hiku-cream mb-1 font-mono">Welcome back</h2>
+                    <p className="text-hiku-muted text-sm mb-8 font-mono">Sign in to your workspace</p>
 
                     {error && (
-                        <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-                            {error}
+                        <div className="mb-6 p-3 bg-hiku-danger-muted/20 border border-hiku-danger text-hiku-cream text-sm font-mono">
+                            [ERROR]: {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5 font-mono">
                         <Input
                             label="Email"
                             type="email"
                             placeholder="you@example.com"
                             value={form.email}
                             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                            leftIcon={<Mail size={15} />}
+                            leftIcon={<Mail size={15} className="text-hiku-muted" />}
                             required
                         />
                         <Input
@@ -61,17 +66,17 @@ export const LoginPage: React.FC = () => {
                             placeholder="••••••••"
                             value={form.password}
                             onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                            leftIcon={<Lock size={15} />}
+                            leftIcon={<Lock size={15} className="text-hiku-muted" />}
                             required
                         />
-                        <Button type="submit" className="w-full" loading={loading} size="lg">
+                        <Button type="submit" className="w-full mt-4" loading={loading} size="lg">
                             Sign In
                         </Button>
                     </form>
 
-                    <p className="text-center text-sm text-hiku-muted mt-6">
+                    <p className="text-center text-sm text-hiku-muted mt-8 font-mono">
                         Don't have an account?{' '}
-                        <Link to="/register" className="text-hiku-accent hover:text-violet-400 font-medium">
+                        <Link to="/register" className="text-hiku-accent hover:text-hiku-accent-bright font-medium underline decoration-hiku-moss underline-offset-4 transition-colors">
                             Create one
                         </Link>
                     </p>
