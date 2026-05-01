@@ -22,4 +22,11 @@ async function request<T>(
     ...options,
     headers,
   });
+
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ message: "Request failed" }));
+    throw new Error(error.message || `HTTP ${response.status}`);
+  }
 }
