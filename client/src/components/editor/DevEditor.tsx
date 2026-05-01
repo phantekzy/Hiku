@@ -27,7 +27,7 @@ export const DevEditor: React.FC<DevEditorProps> = ({
         editable: !readOnly,
         extensions: [
             StarterKit.configure({
-                codeBlock: false,
+                codeBlock: false, // replaced by CodeBlockLowlight
             }),
             CodeBlockLowlight.configure({ lowlight }),
             Placeholder.configure({
@@ -45,6 +45,7 @@ export const DevEditor: React.FC<DevEditorProps> = ({
         },
     });
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSave = useCallback(
         debounce((json: Record<string, unknown>) => {
             onSave?.(json);
@@ -61,6 +62,7 @@ export const DevEditor: React.FC<DevEditorProps> = ({
         return () => { editor.off('update', handler); };
     }, [editor, debouncedSave, onSave]);
 
+    // Sync external content changes
     useEffect(() => {
         if (editor && content && JSON.stringify(editor.getJSON()) !== JSON.stringify(content)) {
             editor.commands.setContent(content);
