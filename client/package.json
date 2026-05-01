@@ -1,12 +1,12 @@
 {
   "name": "hiku-client",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint src --ext ts,tsx"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tiptap/extension-code-block-lowlight": "^2.2.4",
