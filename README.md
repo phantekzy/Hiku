@@ -1,22 +1,8 @@
-## MVP Scope
 
-Hiku provides three core creative modes:
 
-* **Paint Canvas:** A low-latency raster drawing interface for sketching and brainstorming.
-* **Diagram Editor:** A node-based vector tool for creating flowcharts and process maps using specialized nodes (Process, Decision, Terminal).
-* **Dev Editor:** A streamlined environment for technical documentation and developer-centric workflows.
 
----
 
-## Tech Stack
 
-* **Frontend:** React, TypeScript, Vite, Tailwind CSS.
-* **State Management:** Zustand.
-* **Backend:** Node.js, Express, TypeScript.
-* **Database:** PostgreSQL with Prisma ORM.
-* **Authentication:** JWT-based secure auth flow.
-
----
 
 ## Project Structure
 
