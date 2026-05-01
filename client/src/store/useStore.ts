@@ -1,5 +1,6 @@
 import { User } from "../types";
 import { create } from "zustand";
+import { presist } from "zustand/middleware";
 
 interface StoreState {
   // Auth
@@ -15,4 +16,14 @@ interface StoreState {
   setSidebarCollapsed: (v: boolean) => void;
 }
 
-export const useStore = create<StoreState>()();
+export const useStore = create<StoreState>()(
+  presist((set, get) => ({
+    user: null,
+    token: null,
+
+    setAuth: (user, token) => {
+      localStorage.setItem("hiku_token", token);
+      set({ user, token });
+    },
+  })),
+);
