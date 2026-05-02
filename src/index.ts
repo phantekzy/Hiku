@@ -7,9 +7,25 @@ import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const allowedOrigins = [
+  process.env.CLIENT_URL || "http://localhost:5173",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (
+        process.env.NODE_ENV === "production" &&
+        (origin.endsWith(".vercel.app") || origin.endsWith(".vercel.app/"))
+      ) {
+        return callback(null, true);
+      }
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
     credentials: true,
   }),
 );
@@ -19,18 +35,24 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use((req, _res, next) => {
   if (process.env.NODE_ENV === "production") {
-    console.log(`[Vercel Debug] Method: ${req.method} | Path: ${req.path}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   }
   next();
 });
 
 app.get("/", (_req, res) => {
   res.json({
-    message: "Hiku API is live",
+    name: "Hiku API",
     status: "ok",
+    version: "1.0.0",
+    environment: process.env.NODE_ENV,
     endpoints: {
       health: "/health",
       api: "/api",
+      auth: "/api/auth",
+      documents: "/api/documents",
+      canvases: "/api/canvases",
+      diagrams: "/api/diagrams",
     },
   });
 });
@@ -38,8 +60,9 @@ app.get("/", (_req, res) => {
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
-    env: process.env.NODE_ENV,
+    environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
+    database: process.env.DATABASE_URL ? "configured" : "missing",
   });
 });
 
@@ -48,7 +71,9 @@ app.use("/api", routes);
 app.use((req, res) => {
   res.status(404).json({
     message: "Route not found",
-    requestedPath: req.path,
+    path: req.path,
+    method: req.method,
+    hint: "Available routes: /, /health, /api/auth, /api/documents, /api/canvases, /api/diagrams",
   });
 });
 
@@ -56,7 +81,7 @@ app.use(errorHandler);
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
-    console.log(`\n Hiku is running on http://localhost:${PORT}`);
+    console.log(`\n 🌿 Hiku is running on http://localhost:${PORT}`);
     console.log(`   Environment: ${process.env.NODE_ENV}`);
     console.log(`   API: http://localhost:${PORT}/api\n`);
   });
