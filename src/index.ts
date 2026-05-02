@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "path";
 import routes from "./routes";
 import { errorHandler } from "./middleware/errorHandler";
 
@@ -32,6 +33,9 @@ app.use(
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+const publicPath = path.join(__dirname, "public");
+app.use(express.static(publicPath));
 
 app.use((req, _res, next) => {
   if (process.env.NODE_ENV === "production") {
@@ -69,11 +73,15 @@ app.get("/health", (_req, res) => {
 app.use("/api", routes);
 
 app.use((req, res) => {
-  res.status(404).json({
-    message: "Route not found",
-    path: req.path,
-    method: req.method,
-    hint: "Available routes: /, /health, /api/auth, /api/documents, /api/canvases, /api/diagrams",
+  const indexPath = path.join(__dirname, "public", "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      res.status(404).json({
+        message: "Route not found",
+        path: req.path,
+        method: req.method,
+      });
+    }
   });
 });
 
