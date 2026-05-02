@@ -1,4 +1,4 @@
-const BASE_URL = "/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 function getToken(): string | null {
   return localStorage.getItem("hiku_token");
@@ -19,7 +19,12 @@ async function request<T>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  // Prevents URL formatting errors by cleaning trailing and leading slashes
+  const cleanBaseUrl = BASE_URL.replace(/\/$/, "");
+  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  const url = `${cleanBaseUrl}${cleanEndpoint}`;
+
+  const response = await fetch(url, {
     ...options,
     headers,
   });
