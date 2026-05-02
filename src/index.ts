@@ -29,8 +29,13 @@ app.use((_req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`\n Hiku is running on http://localhost:${PORT}`);
-  console.log(`   Environment: ${process.env.NODE_ENV}`);
-  console.log(`   API: http://localhost:${PORT}/api\n`);
-});
+// Only listen locally; Vercel handles the port in production
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`\n Hiku is running on http://localhost:${PORT}`);
+    console.log(`   Environment: ${process.env.NODE_ENV}`);
+    console.log(`   API: http://localhost:${PORT}/api\n`);
+  });
+}
+
+export default app;
