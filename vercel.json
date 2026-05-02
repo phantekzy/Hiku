@@ -2,28 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
+      "src": "src/index.ts",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/**", "prisma/**"]
+        "includeFiles": ["prisma/**", "client/dist/**"]
       }
     }
   ],
   "routes": [
     {
-      "src": "/api(.*)",
-      "dest": "/dist/index.js"
-    },
-    {
-      "src": "/health",
-      "dest": "/dist/index.js"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/dist/index.js"
+      "dest": "src/index.ts"
     }
   ]
 }

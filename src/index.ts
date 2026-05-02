@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/errorHandler";
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ── CORS ──────────────────────────────────────────────────
 const allowedOrigins = [
   process.env.CLIENT_URL || "http://localhost:5173",
   "http://localhost:5173",
@@ -21,7 +22,7 @@ app.use(
       if (allowedOrigins.includes(origin)) return callback(null, true);
       if (
         process.env.NODE_ENV === "production" &&
-        (origin.endsWith(".vercel.app") || origin.endsWith(".vercel.app/"))
+        origin.endsWith(".vercel.app")
       ) {
         return callback(null, true);
       }
@@ -31,12 +32,15 @@ app.use(
   }),
 );
 
+// ── Body parsing ──────────────────────────────────────────
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-const publicPath = path.join(__dirname, "public");
+// ── Serve frontend static files ───────────────────────────
+const publicPath = path.resolve(process.cwd(), "client/dist");
 app.use(express.static(publicPath));
 
+// ── Request logger ────────────────────────────────────────
 app.use((req, _res, next) => {
   if (process.env.NODE_ENV === "production") {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
@@ -44,23 +48,7 @@ app.use((req, _res, next) => {
   next();
 });
 
-app.get("/", (_req, res) => {
-  res.json({
-    name: "Hiku API",
-    status: "ok",
-    version: "1.0.0",
-    environment: process.env.NODE_ENV,
-    endpoints: {
-      health: "/health",
-      api: "/api",
-      auth: "/api/auth",
-      documents: "/api/documents",
-      canvases: "/api/canvases",
-      diagrams: "/api/diagrams",
-    },
-  });
-});
-
+// ── Health check ──────────────────────────────────────────
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
@@ -70,23 +58,23 @@ app.get("/health", (_req, res) => {
   });
 });
 
+// ── API routes ────────────────────────────────────────────
 app.use("/api", routes);
 
-app.use((req, res) => {
-  const indexPath = path.join(__dirname, "public", "index.html");
+// ── Frontend fallback (React Router) ─────────────────────
+app.use((_req, res) => {
+  const indexPath = path.resolve(process.cwd(), "client/dist", "index.html");
   res.sendFile(indexPath, (err) => {
     if (err) {
-      res.status(404).json({
-        message: "Route not found",
-        path: req.path,
-        method: req.method,
-      });
+      res.status(404).json({ message: "Not found" });
     }
   });
 });
 
+// ── Error handler ─────────────────────────────────────────
 app.use(errorHandler);
 
+// ── Start server locally only ─────────────────────────────
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`\n 🌿 Hiku is running on http://localhost:${PORT}`);
@@ -95,4 +83,5 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
+// ── Export for Vercel ─────────────────────────────────────
 export default app;
