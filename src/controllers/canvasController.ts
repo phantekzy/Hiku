@@ -83,7 +83,7 @@ export const updateCanvas = async (
 
     const updated = await prisma.canvas.update({
       where: { id: req.params.id },
-      data: { ...(parsed.data as any) },
+      data: { ...parsed.data } as any,
     });
     res.json(updated);
   } catch (err) {
