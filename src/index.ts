@@ -24,6 +24,17 @@ app.use((req, _res, next) => {
   next();
 });
 
+app.get("/", (_req, res) => {
+  res.json({
+    message: "Hiku API is live",
+    status: "ok",
+    endpoints: {
+      health: "/health",
+      api: "/api",
+    },
+  });
+});
+
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
@@ -41,10 +52,8 @@ app.use((req, res) => {
   });
 });
 
-// 5. ERROR HANDLER
 app.use(errorHandler);
 
-// Only listen locally; Vercel handles the port in production
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`\n Hiku is running on http://localhost:${PORT}`);
