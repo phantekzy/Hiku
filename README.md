@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="client/public/hiku.jpeg" alt="hiku logo" width="200" />
+  <img src="client/public/hiku.svg" alt="hiku logo" width="500" />
 </p>
 
 # hiku // workspace
