@@ -7,10 +7,16 @@ import { api } from '../../lib/api';
 import type { Document, Canvas, Diagram } from '../../types';
 
 const NAV = [
-    { to: '/dashboard', label: 'dashboard', icon: LayoutDashboard, key: 'db' },
-    { to: '/editor', label: 'editor', icon: FileText, key: 'ed' },
-    { to: '/paint', label: 'paint', icon: Paintbrush, key: 'pa' },
-    { to: '/diagram', label: 'diagram', icon: Workflow, key: 'di' },
+    { to: '/dashboard', label: 'dashboard', icon: LayoutDashboard },
+    { to: '/editor', label: 'editor', icon: FileText },
+    { to: '/paint', label: 'paint', icon: Paintbrush },
+    { to: '/diagram', label: 'diagram', icon: Workflow },
+];
+
+const NEW_ITEMS = [
+    { label: 'document', type: 'document' as const, icon: FileText, navPrefix: '/editor/' },
+    { label: 'canvas', type: 'canvas' as const, icon: Paintbrush, navPrefix: '/paint/' },
+    { label: 'diagram', type: 'diagram' as const, icon: Workflow, navPrefix: '/diagram/' },
 ];
 
 interface SidebarProps {
@@ -21,79 +27,83 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onMobileClose }) => {
     const { sidebarCollapsed } = useStore();
     const navigate = useNavigate();
-    const [isCreating, setIsCreating] = useState(false);
+    const [isCreating, setIsCreating] = useState<string | null>(null);
 
-    const handleNew = async (type: 'document' | 'canvas' | 'diagram') => {
+    const handleNew = async (type: 'document' | 'canvas' | 'diagram', navPrefix: string) => {
         if (isCreating) return;
-        setIsCreating(true);
+        setIsCreating(type);
         try {
-            const endpoint = type === 'document' ? '/documents' : type === 'canvas' ? '/canvases' : '/diagrams';
-            const res = await api.post<any>(endpoint, {});
+            const endpoint =
+                type === 'document' ? '/documents' :
+                    type === 'canvas' ? '/canvases' : '/diagrams';
+            const res = await api.post<Document | Canvas | Diagram>(endpoint, {});
             onMobileClose?.();
-            navigate(`/${type === 'document' ? 'editor' : type}/${res.id}`);
-        } catch (error) {
-            console.error(`Failed to create ${type}:`, error);
+            navigate(`${navPrefix}${res.id}`);
+        } catch (err) {
+            console.error(`Failed to create ${type}:`, err);
         } finally {
-            setIsCreating(false);
+            setIsCreating(null);
         }
     };
 
-    const sidebarContent = (
+    const Inner = ({ collapsed }: { collapsed: boolean }) => (
         <div className="flex flex-col h-full select-none overflow-hidden">
-            {/* Logo */}
+
             <div className={cn(
-                "flex items-center h-14 border-b border-hiku-border flex-shrink-0 transition-all duration-200",
-                sidebarCollapsed ? "justify-center px-0" : "justify-between px-4"
+                'flex items-center h-14 border-b border-hiku-border flex-shrink-0',
+                collapsed ? 'justify-center px-2' : 'justify-between px-4',
             )}>
                 <div className="flex items-center gap-1.5">
                     <span className="text-hiku-accent font-mono font-bold text-lg tracking-tighter">
-                        {sidebarCollapsed ? "//" : "hiku"}
+                        {collapsed ? '//' : 'hiku'}
                     </span>
-                    {!sidebarCollapsed && (
-                        <span className="text-hiku-moss text-2xs font-mono hidden sm:block mt-1">v1.0</span>
+                    {!collapsed && (
+                        <span className="text-hiku-moss text-2xs font-mono mt-0.5">v1.0</span>
                     )}
                 </div>
-                {onMobileClose && !sidebarCollapsed && (
-                    <button onClick={onMobileClose} className="text-hiku-muted hover:text-hiku-cream sm:hidden p-1">
-                        <X size={16} />
+                {onMobileClose && !collapsed && (
+                    <button
+                        onClick={onMobileClose}
+                        className="text-hiku-muted hover:text-hiku-cream sm:hidden p-1 transition-colors rounded-sm"
+                    >
+                        <X size={15} />
                     </button>
                 )}
             </div>
 
-            {/* Quick Actions */}
-            <div className={cn("pt-4 pb-2 border-b border-hiku-border/50", sidebarCollapsed ? "px-1.5" : "px-3")}>
-                {!sidebarCollapsed && (
+            <div className={cn(
+                'pt-4 pb-3 border-b border-hiku-border/40',
+                collapsed ? 'px-1.5' : 'px-3',
+            )}>
+                {!collapsed && (
                     <p className="text-2xs text-hiku-moss uppercase tracking-widest mb-2 px-1 font-mono">
                         <span className="text-hiku-accent">// </span>new
                     </p>
                 )}
-                <div className="flex flex-col gap-1">
-                    {[
-                        { label: 'document', type: 'document' as const, icon: FileText },
-                        { label: 'canvas', type: 'canvas' as const, icon: Paintbrush },
-                        { label: 'diagram', type: 'diagram' as const, icon: Workflow },
-                    ].map(({ label, type, icon: Icon }) => (
+                <div className="flex flex-col gap-0.5">
+                    {NEW_ITEMS.map(({ label, type, icon: Icon, navPrefix }) => (
                         <button
                             key={type}
-                            disabled={isCreating}
-                            onClick={() => handleNew(type)}
+                            disabled={!!isCreating}
+                            onClick={() => handleNew(type, navPrefix)}
+                            title={collapsed ? `new ${label}` : undefined}
                             className={cn(
-                                'flex items-center gap-2.5 px-2 py-1.5 rounded-sm w-full text-left transition-all duration-100 font-mono text-xs group',
+                                'flex items-center gap-2.5 py-1.5 rounded-sm w-full text-left',
+                                'font-mono text-xs transition-colors duration-100 group',
                                 'text-hiku-muted hover:text-hiku-cream hover:bg-hiku-surface2',
-                                sidebarCollapsed && 'justify-center',
-                                isCreating && 'opacity-50 cursor-not-allowed'
+                                collapsed ? 'justify-center px-1' : 'px-2',
+                                isCreating && 'opacity-50 cursor-not-allowed',
                             )}
-                            title={sidebarCollapsed ? label : undefined}
                         >
-                            {isCreating ? (
-                                <Loader2 size={14} className="animate-spin text-hiku-accent" />
-                            ) : sidebarCollapsed ? (
-                                <Icon size={14} className="text-hiku-accent group-hover:text-hiku-accent-bright" />
+                            {isCreating === type ? (
+                                <Loader2 size={13} className="animate-spin text-hiku-accent flex-shrink-0" />
+                            ) : collapsed ? (
+                                <Icon size={14} className="text-hiku-accent group-hover:text-hiku-accent-bright transition-colors" />
                             ) : (
                                 <>
-                                    <Plus size={11} className="text-hiku-accent flex-shrink-0 group-hover:text-hiku-accent-bright" />
-                                    <span className="truncate">{label}</span>
-                                    <Icon size={11} className="ml-auto text-hiku-border group-hover:text-hiku-moss" />
+                                    <Plus size={11} className="text-hiku-accent flex-shrink-0 group-hover:text-hiku-accent-bright transition-colors" />
+                                    <span className="truncate flex-1">{label}</span>
+                                    <Icon size={11} className="text-hiku-border group-hover:text-hiku-moss transition-colors" />
                                 </>
                             )}
                         </button>
@@ -101,9 +111,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onMobileClose }) =
                 </div>
             </div>
 
-            {/* Navigation */}
-            <nav className={cn("flex-1 py-3 overflow-y-auto custom-scrollbar", sidebarCollapsed ? "px-1.5" : "px-3")}>
-                {!sidebarCollapsed && (
+            <nav className={cn(
+                'flex-1 py-3 overflow-y-auto',
+                collapsed ? 'px-1.5' : 'px-3',
+            )}>
+                {!collapsed && (
                     <p className="text-2xs text-hiku-moss uppercase tracking-widest mb-2 px-1 font-mono">
                         <span className="text-hiku-accent">// </span>nav
                     </p>
@@ -113,33 +125,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onMobileClose }) =
                         <NavLink
                             key={to}
                             to={to}
+                            end
                             onClick={onMobileClose}
+                            title={collapsed ? label : undefined}
                             className={({ isActive }) => cn(
-                                'flex items-center gap-2.5 px-2 py-2 rounded-sm font-mono text-xs transition-colors duration-100',
+                                'flex items-center gap-2.5 py-2 rounded-sm font-mono text-xs transition-colors duration-100 border-l-2',
                                 isActive
-                                    ? 'bg-hiku-surface2 text-hiku-cream border-l-2 border-hiku-accent pl-[6px]'
-                                    : 'text-hiku-muted hover:text-hiku-cream hover:bg-hiku-surface2/50 border-l-2 border-transparent pl-[6px]',
-                                sidebarCollapsed && 'justify-center pl-2'
+                                    ? 'bg-hiku-surface2 text-hiku-cream border-hiku-accent'
+                                    : 'text-hiku-muted hover:text-hiku-cream hover:bg-hiku-surface2/50 border-transparent',
+                                collapsed ? 'justify-center px-1 border-l-0' : 'pl-[6px] pr-2',
                             )}
-                            title={sidebarCollapsed ? label : undefined}
                         >
                             <Icon size={14} className="flex-shrink-0" />
-                            {!sidebarCollapsed && <span className="truncate">{label}</span>}
+                            {!collapsed && <span className="truncate">{label}</span>}
                         </NavLink>
                     ))}
                 </div>
             </nav>
 
-            {/* Footer */}
             <div className={cn(
-                "py-3 border-t border-hiku-border/50 transition-all",
-                sidebarCollapsed ? "px-0 flex justify-center" : "px-4"
+                'py-3 border-t border-hiku-border/40',
+                collapsed ? 'flex justify-center px-2' : 'px-4',
             )}>
-                {sidebarCollapsed ? (
-                    <span className="text-hiku-moss text-[10px] font-mono">$</span>
+                {collapsed ? (
+                    <span className="text-hiku-moss text-xs font-mono">$</span>
                 ) : (
                     <p className="text-2xs text-hiku-pine font-mono">
-                        <span className="text-hiku-moss">$</span> hiku --workspace
+                        <span className="text-hiku-moss">$ </span>hiku --workspace
                     </p>
                 )}
             </div>
@@ -148,19 +160,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onMobileClose }) =
 
     return (
         <>
+            {/* Desktop sidebar */}
             <aside className={cn(
-                'hidden sm:flex flex-col h-full bg-hiku-surface border-r border-hiku-border transition-all duration-200 flex-shrink-0',
+                'hidden sm:flex flex-col h-full bg-hiku-surface border-r border-hiku-border',
+                'transition-all duration-200 flex-shrink-0',
                 sidebarCollapsed ? 'w-12' : 'w-48',
             )}>
-                {sidebarContent}
+                <Inner collapsed={sidebarCollapsed} />
             </aside>
 
+            {/* Mobile drawer */}
             {mobileOpen && (
                 <>
-                    <div className="fixed inset-0 z-40 bg-black/60 sm:hidden animate-in fade-in duration-300" onClick={onMobileClose} />
-                    <aside className="fixed inset-y-0 left-0 z-50 w-64 flex flex-col bg-hiku-surface border-r border-hiku-border sm:hidden animate-in slide-in-from-left duration-300">
-                        {/* Note: Mobile drawer uses !sidebarCollapsed logic by default (w-64) */}
-                        {React.cloneElement(sidebarContent as React.ReactElement, { sidebarCollapsed: false })}
+                    <div
+                        className="fixed inset-0 z-40 bg-black/70 sm:hidden animate-fade-in"
+                        onClick={onMobileClose}
+                    />
+                    <aside className="fixed inset-y-0 left-0 z-50 w-60 flex flex-col bg-hiku-surface border-r border-hiku-border sm:hidden animate-slide-up">
+                        <Inner collapsed={false} />
                     </aside>
                 </>
             )}

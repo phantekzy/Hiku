@@ -27,19 +27,19 @@ export const Button: React.FC<ButtonProps> = ({
         'select-none whitespace-nowrap',
     ].join(' ');
 
-    const variants = {
+    const variants: Record<string, string> = {
         primary: 'bg-hiku-accent border-hiku-accent text-hiku-bg hover:bg-hiku-accent-hover hover:border-hiku-accent-hover',
-        secondary: 'bg-hiku-surface2 border-hiku-border text-hiku-cream hover:border-hiku-border-light hover:bg-hiku-surface',
+        secondary: 'bg-hiku-surface2 border-hiku-border text-hiku-cream hover:border-hiku-border-light hover:bg-hiku-pine',
         ghost: 'bg-transparent border-transparent text-hiku-muted hover:text-hiku-cream hover:bg-hiku-surface2',
         danger: 'bg-transparent border-hiku-danger-muted text-hiku-danger hover:bg-hiku-danger-muted/20',
         outline: 'bg-transparent border-hiku-border text-hiku-cream-dim hover:border-hiku-accent hover:text-hiku-cream',
     };
 
-    const sizes = {
+    const sizes: Record<string, string> = {
         xs: 'px-2 py-1 text-2xs rounded-sm',
         sm: 'px-3 py-1.5 text-xs rounded-sm',
         md: 'px-4 py-2 text-sm rounded',
-        lg: 'px-6 py-2.5 text-base rounded',
+        lg: 'px-5 py-2.5 text-sm rounded',
     };
 
     return (

@@ -6,9 +6,15 @@ interface LayoutProps {
     children: React.ReactNode;
     title?: string;
     headerActions?: React.ReactNode;
+    showBack?: boolean;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, title, headerActions }) => {
+export const Layout: React.FC<LayoutProps> = ({
+    children,
+    title,
+    headerActions,
+    showBack = false,
+}) => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
@@ -22,6 +28,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, title, headerActions }
                     title={title}
                     actions={headerActions}
                     onMobileMenuOpen={() => setMobileOpen(true)}
+                    showBack={showBack}
                 />
                 <main className="flex-1 overflow-auto">{children}</main>
             </div>

@@ -14,10 +14,9 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
 
     const [tool, setTool] = useState<DrawingTool>('brush');
     const [brushSize, setBrushSize] = useState(4);
-    const [color, setColor] = useState('#a78bfa');
+    const [color, setColor] = useState('#4a7c59');
     const [isFill, setIsFill] = useState(false);
 
-    // Track shape drawing state
     const isDrawingShape = useRef(false);
     const shapeStartX = useRef(0);
     const shapeStartY = useRef(0);
@@ -29,7 +28,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
         const { offsetWidth: w, offsetHeight: h } = containerRef.current;
 
         const canvas = new fabric.Canvas(canvasRef.current, {
-            backgroundColor: '#0d0d1a',
+            backgroundColor: '#0a0f0a',
             width: w,
             height: h,
             selection: false,
@@ -37,17 +36,15 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
 
         fabricRef.current = canvas;
 
-        // Load saved data
         if (initialData && Object.keys(initialData).length > 0) {
             canvas.loadFromJSON(initialData, () => canvas.renderAll());
         }
 
-        return () => {
-            canvas.dispose();
-        };
+        return () => { canvas.dispose(); };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Autosave
     useEffect(() => {
         const canvas = fabricRef.current;
         if (!canvas || !onSave) return;
@@ -75,11 +72,11 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
         };
     }, [onSave]);
 
+    // Handle tool changes
     useEffect(() => {
         const canvas = fabricRef.current;
         if (!canvas) return;
 
-        // Reset all modes
         canvas.isDrawingMode = false;
         canvas.selection = false;
         canvas.off('mouse:down');
@@ -101,7 +98,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
 
             case 'eraser':
                 canvas.isDrawingMode = true;
-                canvas.freeDrawingBrush.color = '#0d0d1a';
+                canvas.freeDrawingBrush.color = '#0a0f0a';
                 canvas.freeDrawingBrush.width = brushSize * 2;
                 break;
 
@@ -114,11 +111,11 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
             case 'text':
                 canvas.on('mouse:down', (opt) => {
                     const pointer = canvas.getPointer(opt.e as MouseEvent);
-                    const text = new fabric.IText('Type here…', {
+                    const text = new fabric.IText('type here…', {
                         left: pointer.x,
                         top: pointer.y,
                         fill: color,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: 'JetBrains Mono',
                         selectable: true,
                         evented: true,
@@ -201,9 +198,9 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
     const handleClear = useCallback(() => {
         const canvas = fabricRef.current;
         if (!canvas) return;
-        if (window.confirm('Clear the entire canvas?')) {
+        if (window.confirm('clear the entire canvas?')) {
             canvas.clear();
-            canvas.setBackgroundColor('#0d0d1a', () => canvas.renderAll());
+            canvas.setBackgroundColor('#0a0f0a', () => canvas.renderAll());
         }
     }, []);
 
@@ -217,7 +214,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
     }, []);
 
     return (
-        <div className="flex h-full">
+        <div className="flex flex-col sm:flex-row h-full">
             <CanvasToolbar
                 activeTool={tool}
                 onToolChange={setTool}
@@ -233,7 +230,9 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({ initialData, onSave })
             <div
                 ref={containerRef}
                 className="flex-1 overflow-hidden bg-hiku-bg"
-                style={{ cursor: tool === 'text' ? 'text' : tool === 'select' ? 'default' : 'crosshair' }}
+                style={{
+                    cursor: tool === 'text' ? 'text' : tool === 'select' ? 'default' : 'crosshair',
+                }}
             >
                 <canvas ref={canvasRef} />
             </div>

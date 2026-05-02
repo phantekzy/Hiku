@@ -30,7 +30,7 @@ export const Input: React.FC<InputProps> = ({
             )}
             <div className="relative flex items-center">
                 {prefix && (
-                    <span className="absolute left-3 text-hiku-moss text-sm font-mono select-none">{prefix}</span>
+                    <span className="absolute left-3 text-hiku-moss text-xs font-mono select-none">{prefix}</span>
                 )}
                 {leftIcon && !prefix && (
                     <span className="absolute left-3 text-hiku-muted">{leftIcon}</span>
@@ -38,22 +38,22 @@ export const Input: React.FC<InputProps> = ({
                 <input
                     id={inputId}
                     className={cn(
-                        'w-full bg-hiku-surface border text-hiku-cream font-mono text-sm',
+                        'w-full bg-hiku-surface border font-mono text-sm text-hiku-cream',
                         'rounded-sm px-3 py-2.5',
-                        'placeholder:text-hiku-moss/60',
+                        'placeholder:text-hiku-pine',
                         'focus:outline-none focus:border-hiku-accent focus:bg-hiku-surface2',
                         'transition-colors duration-150',
                         'disabled:opacity-40 disabled:cursor-not-allowed',
                         error ? 'border-hiku-danger' : 'border-hiku-border',
                         (leftIcon || prefix) && 'pl-9',
-                        className
+                        className,
                     )}
                     {...props}
                 />
             </div>
             {error && (
                 <p className="text-2xs text-hiku-danger font-mono">
-                    <span className="text-hiku-danger-muted">✗ </span>{error}
+                    <span className="mr-1">✗</span>{error}
                 </p>
             )}
             {hint && !error && (

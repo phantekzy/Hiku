@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react'; // Removed the vibe-coder Zap icon
+import { Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -25,61 +25,88 @@ export const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-hiku-bg flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
+        <div className="min-h-screen bg-hiku-bg flex flex-col">
 
-                {/* Terminal Style Logo - No generic icons, no floating badges */}
-                <div className="flex items-center justify-center mb-10 font-mono">
-                    <span className="text-hiku-moss text-3xl font-bold mr-4">{">"}</span>
-                    <span className="text-4xl font-bold text-hiku-cream tracking-tight">hiku</span>
-                    <span className="w-4 h-9 bg-hiku-accent animate-blink ml-2 inline-block"></span>
-                </div>
+            <div className="flex items-center justify-between px-4 sm:px-8 py-4 border-b border-hiku-border">
+                <Link
+                    to="/"
+                    className="flex items-center gap-2 font-mono text-xs text-hiku-muted hover:text-hiku-cream transition-colors group"
+                >
+                    <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
+                    <span>back_to_home</span>
+                </Link>
+                <span className="font-mono font-bold text-hiku-cream text-base tracking-tighter">
+                    hiku<span className="text-hiku-accent animate-blink">▋</span>
+                </span>
+            </div>
 
-                {/* Brutalist / Systems Card */}
-                <div className="bg-hiku-surface border border-hiku-border p-8 relative shadow-glow-sm">
-                    {/* Minimalist corner accents */}
-                    <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-hiku-accent"></div>
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-hiku-accent"></div>
+            <div className="flex-1 flex items-center justify-center p-4">
+                <div className="w-full max-w-sm">
 
-                    <h2 className="text-2xl font-bold text-hiku-cream mb-1 font-mono">Welcome back</h2>
-                    <p className="text-hiku-muted text-sm mb-8 font-mono">Sign in to your workspace</p>
+                    <div className="mb-8">
+                        <p className="font-mono text-2xs text-hiku-moss mb-3">
+                            <span className="text-hiku-accent">$ </span>hiku auth --login
+                        </p>
+                        <h1 className="font-mono font-bold text-2xl text-hiku-cream tracking-tight mb-1">
+                            Welcome back
+                        </h1>
+                        <p className="font-mono text-xs text-hiku-muted">
+                            sign in to your workspace
+                        </p>
+                    </div>
 
-                    {error && (
-                        <div className="mb-6 p-3 bg-hiku-danger-muted/20 border border-hiku-danger text-hiku-cream text-sm font-mono">
-                            [ERROR]: {error}
+                    <div className="bg-hiku-surface border border-hiku-border p-6 relative">
+                        <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-hiku-accent" />
+                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b-2 border-r-2 border-hiku-accent" />
+
+                        {error && (
+                            <div className="mb-5 px-3 py-2.5 bg-hiku-danger-muted/20 border border-hiku-danger/50 font-mono text-xs text-hiku-cream flex items-start gap-2">
+                                <span className="text-hiku-danger mt-0.5 flex-shrink-0">✗</span>
+                                <span>{error}</span>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <Input
+                                label="Email"
+                                type="email"
+                                placeholder="you@example.com"
+                                value={form.email}
+                                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                                leftIcon={<Mail size={14} />}
+                                required
+                            />
+                            <Input
+                                label="Password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={form.password}
+                                onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+                                leftIcon={<Lock size={14} />}
+                                required
+                            />
+                            <Button
+                                type="submit"
+                                className="w-full mt-2"
+                                loading={loading}
+                                size="md"
+                            >
+                                sign_in →
+                            </Button>
+                        </form>
+
+                        <div className="mt-5 pt-4 border-t border-hiku-border/50">
+                            <p className="font-mono text-xs text-hiku-muted text-center">
+                                no account?{' '}
+                                <Link
+                                    to="/register"
+                                    className="text-hiku-accent hover:text-hiku-accent-bright transition-colors underline underline-offset-3 decoration-hiku-moss"
+                                >
+                                    create_one
+                                </Link>
+                            </p>
                         </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-5 font-mono">
-                        <Input
-                            label="Email"
-                            type="email"
-                            placeholder="you@example.com"
-                            value={form.email}
-                            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                            leftIcon={<Mail size={15} className="text-hiku-muted" />}
-                            required
-                        />
-                        <Input
-                            label="Password"
-                            type="password"
-                            placeholder="••••••••"
-                            value={form.password}
-                            onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                            leftIcon={<Lock size={15} className="text-hiku-muted" />}
-                            required
-                        />
-                        <Button type="submit" className="w-full mt-4" loading={loading} size="lg">
-                            Sign In
-                        </Button>
-                    </form>
-
-                    <p className="text-center text-sm text-hiku-muted mt-8 font-mono">
-                        Don't have an account?{' '}
-                        <Link to="/register" className="text-hiku-accent hover:text-hiku-accent-bright font-medium underline decoration-hiku-moss underline-offset-4 transition-colors">
-                            Create one
-                        </Link>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
