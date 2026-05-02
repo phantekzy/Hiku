@@ -88,7 +88,7 @@ export const updateDiagram = async (
 
     const updated = await prisma.diagram.update({
       where: { id: req.params.id },
-      data: { ...parsed.data },
+      data: { ...(parsed.data as any) },
     });
     res.json(updated);
   } catch (err) {
