@@ -2,17 +2,32 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/index.ts",
+      "src": "package.json",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["prisma/**"]
+        "includeFiles": ["dist/**", "prisma/**"]
+      }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "client/dist"
       }
     }
   ],
   "routes": [
     {
+      "src": "/api(.*)",
+      "dest": "dist/index.js"
+    },
+    {
+      "src": "/health",
+      "dest": "dist/index.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "src/index.ts"
+      "dest": "client/dist/$1"
     }
   ]
 }
