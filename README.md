@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="client/public/hiku.svg" alt="hiku logo" width="500" />
-</p>
+<!-- <p align="center">
+  <img src="client/public/hiku.png" alt="hiku logo" width="500" />
+</p> -->
 
 # hiku // workspace
 
