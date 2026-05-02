@@ -4,6 +4,10 @@
     {
       "source": "/api/(.*)",
       "destination": "src/index.ts"
+    },
+    {
+      "source": "/health",
+      "destination": "src/index.ts"
     }
   ]
 }
